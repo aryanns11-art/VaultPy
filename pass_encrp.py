@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlparse
 
 FILE_NAME = "vault.json"
 
@@ -17,14 +18,30 @@ def save_data(vault):
 
 #----------------------------------------------------------------------------------------------------
 
+def valid_url(url):
+    result = urlparse(url)
+    return all([result.scheme, result.netloc])   # all() returns True only if all values are truthy.
+
+#----------------------------------------------------------------------------------------------------
+
 def add_password(vault):
-    website = input("Website: ")
+    website = input("Website: ").lower()
+    website_url = input("Website URL: ")
+
+    if not valid_url(website_url):
+        print("Invalid URL!")
+        return
+    
+    if website in vault:
+        print("Website already exists!")
+        return
     username = input("Username: ")
     password = input("Password: ")
 
     vault[website] = {
         "username": username,
-        "password": password
+        "password": password,
+        "url":website_url
     }
 
     save_data(vault)
@@ -38,19 +55,22 @@ def view_password(vault):
     print("All Passwords".center(50))    
     print(f"=" *50)
 
-    print(f"\n{'No':5}{'Website':<10}{'username':<25}{'password':<20}")
+    print(f"\n{'No':5}{'Website':<15}{'username':<25}{'password':<20}\n")
 
     for idx, web in enumerate(vault, 1):
+        url = vault[web]["url"]
         username = vault[web]['username']
         password = vault[web]['password']
 
-        print(f"{idx:<5}{web:<10}{username:<25}{password:<20}")
-    print(f"\n" + "-" * 50)    
+        print(f"{idx:<5}{web:<15}{username:<25}{password:<20}")
+        print(f"     URL: {url}\n")
+        
+    print(f"-" * 50)    
 
 #----------------------------------------------------------------------------------------------------
 
 def search_password(vault):
-    website = input("Enter website name: ")
+    website = input("Enter website name: ").lower()
 
     if website in vault:
         print("\nWebsite :", website)
@@ -61,8 +81,32 @@ def search_password(vault):
 
 #----------------------------------------------------------------------------------------------------
 
+def update_passwords(vault):
+
+    view_password(vault)
+
+    website = input("Enter Website :").lower()
+
+    if website in vault:
+
+        new_username = input("New Username (Enter to keep old): ")
+        new_password = input("New Password (Enter to keep old): ")
+
+        if new_username:
+            vault[website]["username"] = new_username
+        
+        if new_password:
+            vault[website]["password"] = new_password
+
+        save_data(vault)
+        print("Updated Successfully")
+
+    else:
+        print("Web  site not found in stored websites !")      
+#----------------------------------------------------------------------------------------------------
+
 def delete_password(vault):
-    website = input("Enter website to delete: ")
+    website = input("Enter website to delete: ").lower()
 
     if website in vault:
         del vault[website]
@@ -84,7 +128,8 @@ def main():
         print("2. Show Pass")
         print("3. Search Pass")
         print("4. Delete Pass")
-        print("5. Exit")
+        print("5. Update Password")
+        print("6. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -101,6 +146,9 @@ def main():
             delete_password(vault)
 
         elif choice == '5':
+            update_passwords(vault)    
+
+        elif choice == '6':
             print("Goodbye!")
             break
 

@@ -1,14 +1,17 @@
 {
-    "gmail": {
+    "GitHub": {
+        "url": "https://github.com",
+        "username": "Aryan99",
+        "password": "updattedpass"
+    },
+    "Gmail": {
+        "url": "https://mail.google.com",
         "username": "aryan@gmail.com",
-        "password": "12345"
+        "password": "abc123"
     },
-    "github": {
-        "username": "aryan0411",
-        "password": "aryan0099"
-    },
-    "amazon": {
-        "username": "joedeck",
-        "password": "opis good"
+    "Flipkart": {
+        "username": "Joe",
+        "password": "joe000",
+        "url": "https://www.flipkart.com/"
     }
 }
