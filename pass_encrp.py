@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from getpass import getpass
 import random
 import string
+from cryptography.fernet import Fernet
 
 FILE_NAME = "vault.json"
 
@@ -27,6 +28,15 @@ def valid_url(url):
 
 #----------------------------------------------------------------------------------------------------
 
+def load_key():
+    with open("key.key", "rb") as file:
+        return file.read()
+
+key = load_key()
+cipher = Fernet(key)
+
+#----------------------------------------------------------------------------------------------------
+
 def add_password(vault):
     website = input("Website: ").lower()
     website_url = input("Website URL: ")
@@ -41,9 +51,11 @@ def add_password(vault):
     username = input("Username: ")
     password = getpass("Password: ")
 
+    encrypted_password = cipher.encrypt(password.encode()).decode()   
+    
     vault[website] = {
         "username": username,
-        "password": password,
+        "password": encrypted_password,
         "url":website_url
     }
 
@@ -63,7 +75,9 @@ def view_password(vault):
     for idx, web in enumerate(vault, 1):
         url = vault[web]["url"]
         username = vault[web]['username']
-        password = vault[web]['password']
+
+        encrypted_password = vault[web]["password"]
+        password = cipher.decrypt(encrypted_password.encode()).decode()
 
         print(f"{idx:<5}{web:<15}{username:<25}{password:<20}")
         print(f"     URL: {url}\n")
@@ -76,9 +90,13 @@ def search_password(vault):
     website = input("Enter website name: ").lower()
 
     if website in vault:
-        print("\nWebsite :", website)
-        print("Username:", vault[website]["username"])
-        print("Password:", vault[website]["password"])
+
+        encrypted_password = vault[website]["password"]
+        password = cipher.decrypt(encrypted_password.encode()).decode()
+
+        print("\nWebsite: ", website)
+        print("Username: ", vault[website]["username"])
+        print("Password: ", password)
     else:
         print("Website not found!")
 
@@ -99,7 +117,8 @@ def update_passwords(vault):
             vault[website]["username"] = new_username
         
         if new_password:
-            vault[website]["password"] = new_password
+            encrypted_password = cipher.encrypt(new_password.encode()).decode()
+            vault[website]["password"] = encrypted_password
 
         save_data(vault)
         print("Updated Successfully")
@@ -137,13 +156,16 @@ def delete_password(vault):
 
 def chk_masterpass():
 
-    masterpass = getpass("Enter Master Password to View all passowrds :")
+    for _ in range(3):
+        masterpass = getpass("Enter Master Password to View all passowrds :")
 
-    if masterpass == "Aryan9911":
-        return True
-    else:
-        print("Incorrect Password ! Access denied !")
-        return False
+        if masterpass == "Aryan9911":
+            return True
+        else:
+            print("Incorrect Password !")
+
+    print("Access denied !")
+    return False
 
 #----------------------------------------------------------------------------------------------------
 
@@ -183,8 +205,9 @@ def main():
                 update_passwords(vault)  
 
             elif choice == '6':
-                generate_password()
-
+                password = generate_password()
+                print(f"\nGenerated Password: {password}")
+                
             elif choice == '7':
                 print("Goodbye!")
                 break
@@ -194,3 +217,43 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#-----------------------------Understanding---------------------------------------
+
+'''
+*  encrypted_password = cipher.encrypt(password.encode()).decode()  *
+    
+passowrd = hello123
+
+hello123 -> password.encode() -> b'hello123' (Because Fernet encrypts bytes, not strings.
+
+cipher.encrypt(b'hello123') -> b'gAAAAABoXYZabc123...'   (Fernet encrypts the bytes.
+
+(Notice the b.This means the encrypted result is still bytes.)
+(JSON cannot store bytes directly.)
+
+decodes() -> b'gAAAAABoXYZabc123...' -> 'gAAAAABoXYZabc123...' (which is a normal Python string.)
+(Now it can be saved in JSON.)
+
+'''
+
+
+'''
+* password = cipher.decrypt(encrypted_password.encode()).decode() *
+
+encrypted_password = 'gAAAAABoXYZabc123...'
+
+'gAAAAABoXYZabc123...' -> encode() -> b'gAAAAABoXYZabc123...'
+
+(Fernet decrypts bytes, not strings.)
+
+b'gAAAAABoXYZabc123...' -> cipher.decrypt() -> b'hello123'
+
+(The encrypted bytes are decrypted.)
+
+b'hello123' -> .decode() -> 'hello123'
+
+(decode() converts bytes -> string)
+
+Got back the original password.
+'''

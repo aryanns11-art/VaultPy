@@ -1,17 +1,22 @@
 {
-    "GitHub": {
-        "url": "https://github.com",
+    "instagram": {
+        "username": "aryan0411",
+        "password": "gAAAAABqMXde19RypGEUi6fzAD5Y-FShwuR4opq1_B9iZCJ6DYlpLSLn0SWjrZoxdH_6Ls6DKXzANsUyqy7HWlDd0SEN2DGwwQ==",
+        "url": "https://www.instagram.com/"
+    },
+    "github": {
         "username": "Aryan99",
-        "password": "updattedpass"
+        "password": "gAAAAABqMXbQuEm6f6GvaDnWzX_UVio7LPi4baDZt_MsnTndDmHGURs5SfM7GkzLAm08PNZ_9xUGIhlaUt4PTAWEDxTaFbcJ0w==",
+        "url": "https://github.com"
     },
-    "Gmail": {
-        "url": "https://mail.google.com",
-        "username": "aryan@gmail.com",
-        "password": "abc123"
+    "gmail": {
+        "username": "aryan0411@gmail.com",
+        "password": "gAAAAABqMXb2EbpfaKj59pJIPhPeCVOAVfJ92vxxQpzFrFwr4AwbmReWCm-Mp5kCtgfHsJe63IVfGL0QiIayGcTgtgn6UGHkhg==",
+        "url": "https://mail.google.com"
     },
-    "Flipkart": {
-        "username": "Joe",
-        "password": "joe000",
+    "flipkart": {
+        "username": "Aryan66",
+        "password": "gAAAAABqMXcVuo68sqrxaYVgbOuu5BuSTqssdthX7e8-C2x26RY_RoCzM8jxc69_8t0wOMEGE9_KeasQ1-SViudac_-OsFuMlw==",
         "url": "https://www.flipkart.com/"
     }
 }
