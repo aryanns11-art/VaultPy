@@ -50,42 +50,66 @@ def add_password(vault):
         return
     
     username = input("Username: ")
-    print("1.Enter password manually \n2.Generate Password")
+
+    print("1. Enter password manually")
+    print("2. Generate Password")
 
     try:
-        ch = int(input('Enter Choice: '))
+        ch = int(input("Enter Choice: "))
     except ValueError:
-        print('Invalid Input !')    
+        print("Invalid Input!")
         return
-    
+
     if ch == 1:
-        password = getpass("Password: ")
-    
+        while True:
+            password = getpass("Password: ")
+            strength = check_password_strength(password)
+
+            print(f"Password Strength: {strength}")
+
+            if strength != "Weak" :
+                break
+
+            retry = input("Weak password. Try again? (y/n): ").lower()
+            if retry != 'y':
+                return
+
     elif ch == 2:
+        while True:
+            password = generate_password()
+            strength = check_password_strength(password)
 
-        password = generate_password()
-        print(f"\nGenerated Password: {password}")
+            print(f"\nGenerated Password: {password}")
+            print(f"Strength: {strength}")
 
-        confirm = input("Use this password? (y/n): ").lower()
-        if confirm == 'n':
-            print("Operation cancelled.")
-            return
+            if strength != "Weak" :
+                confirm = input("Use this password? (y = yes / r = regenerate / n = cancel): ").lower()
+
+                if confirm == 'y':
+                    break
+
+                elif confirm == 'r':
+                    continue
+                
+                elif confirm == 'n':
+                    return
+            else:
+                print("Weak password, regenerating...\n")
 
     else:
         print("Invalid choice!")
         return
 
-    encrypted_password = cipher.encrypt(password.encode()).decode()   
-    
+    encrypted_password = cipher.encrypt(password.encode()).decode()
+
     vault[website] = {
         "username": username,
         "password": encrypted_password,
-        "url":website_url
+        "url": website_url
     }
 
     save_data(vault)
     print("Password saved successfully!")
-
 #----------------------------------------------------------------------------------------------------
 
 def view_password(vault):
@@ -191,6 +215,25 @@ def chk_masterpass():
     print("Access denied !")
     return False
 
+#----------------------------------------------------------------------------------------------------
+
+def check_password_strength(password):
+    length = len(password)
+
+    has_lower = any(c.islower() for c in password)
+    has_upper = any(c.isupper() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_symbol = any(c in "!@#$%^&*" for c in password)
+
+    score = sum([has_lower, has_upper, has_digit, has_symbol])
+
+    if length >= 12 and score == 4:
+        return "Strong"
+    elif length >= 8 and score >= 3:
+        return "Medium"
+    else:
+        return "Weak"
+    
 #----------------------------------------------------------------------------------------------------
 
 vault = load_data()
