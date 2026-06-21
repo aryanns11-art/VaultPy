@@ -48,8 +48,32 @@ def add_password(vault):
     if website in vault:
         print("Website already exists!")
         return
+    
     username = input("Username: ")
-    password = getpass("Password: ")
+    print("1.Enter password manually \n2.Generate Password")
+
+    try:
+        ch = int(input('Enter Choice: '))
+    except ValueError:
+        print('Invalid Input !')    
+        return
+    
+    if ch == 1:
+        password = getpass("Password: ")
+    
+    elif ch == 2:
+
+        password = generate_password()
+        print(f"\nGenerated Password: {password}")
+
+        confirm = input("Use this password? (y/n): ").lower()
+        if confirm == 'n':
+            print("Operation cancelled.")
+            return
+
+    else:
+        print("Invalid choice!")
+        return
 
     encrypted_password = cipher.encrypt(password.encode()).decode()   
     
@@ -184,8 +208,7 @@ def main():
             print("3. Search Pass")
             print("4. Delete Pass")
             print("5. Update Password")
-            print("6. Genearte Password")
-            print("7. Exit")
+            print("6. Exit")
 
             choice = input("Enter your choice: ")
 
@@ -203,12 +226,8 @@ def main():
 
             elif choice == '5':
                 update_passwords(vault)  
-
-            elif choice == '6':
-                password = generate_password()
-                print(f"\nGenerated Password: {password}")
                 
-            elif choice == '7':
+            elif choice == '6':
                 print("Goodbye!")
                 break
 
