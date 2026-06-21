@@ -4,6 +4,8 @@ from getpass import getpass
 import random
 import string
 from cryptography.fernet import Fernet
+import hashlib
+import os
 
 FILE_NAME = "vault.json"
 
@@ -29,12 +31,46 @@ def valid_url(url):
 #----------------------------------------------------------------------------------------------------
 
 def load_key():
+    if not os.path.exists("key.key"):
+        key = Fernet.generate_key()
+        with open("key.key", "wb") as file:
+            file.write(key)
+        return key
+
     with open("key.key", "rb") as file:
         return file.read()
 
-key = load_key()
-cipher = Fernet(key)
+#----------------------------------------------------------------------------------------------------
 
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+#----------------------------------------------------------------------------------------------------
+
+def setup_master_password():
+    if not os.path.exists("master.key"):
+        print("Set a Master Password")
+
+        while True:
+            password = getpass("Create Master Password: ")
+            confirm = getpass("Confirm Password: ")
+
+            if not password:
+                print("Password cannot be empty!")
+                continue
+
+            if password != confirm:
+                print("Passwords do not match!")
+                continue
+
+            hashed = hash_password(password)
+
+            with open("master.key", "w") as f:
+                f.write(hashed)
+
+            print("Master password set successfully!")
+            break
+        
 #----------------------------------------------------------------------------------------------------
 
 def add_password(vault):
@@ -203,16 +239,20 @@ def delete_password(vault):
 #----------------------------------------------------------------------------------------------------
 
 def chk_masterpass():
+    if not os.path.exists("master.key"):
+        setup_master_password()
+
+    with open("master.key", "r") as f:
+        stored_hash = f.read()
 
     for _ in range(3):
-        masterpass = getpass("Enter Master Password to View all passowrds :")
-
-        if masterpass == "Aryan9911":
+        password = getpass("Enter Master Password: ")
+        if hash_password(password) == stored_hash:
             return True
         else:
-            print("Incorrect Password !")
+            print("Incorrect Password!")
 
-    print("Access denied !")
+    print("Access Denied!")
     return False
 
 #----------------------------------------------------------------------------------------------------
@@ -318,4 +358,15 @@ b'hello123' -> .decode() -> 'hello123'
 (decode() converts bytes -> string)
 
 Got back the original password.
+'''
+
+'''
+"mypassword123"
+   ↓ encode()
+b"mypassword123"
+   ↓ sha256()
+<hash object>
+   ↓ hexdigest()
+"5e884898da28047151d0e56f8dc629..."
+
 '''
