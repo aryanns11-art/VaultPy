@@ -39,6 +39,9 @@ def load_key():
 
     with open("key.key", "rb") as file:
         return file.read()
+    
+key = load_key()
+cipher = Fernet(key)
 
 #----------------------------------------------------------------------------------------------------
 
@@ -163,10 +166,34 @@ def view_password(vault):
         encrypted_password = vault[web]["password"]
         password = cipher.decrypt(encrypted_password.encode()).decode()
 
-        print(f"{idx:<5}{web:<15}{username:<25}{password:<20}")
+        masked = password[:2] + "*" * (len(password) - 2)
+
+        print(f"{idx:<5}{web:<15}{username:<25}{masked:<20}")
         print(f"     URL: {url}\n")
         
-    print(f"-" * 50)    
+    print(f"-" * 50)
+
+
+    choice = input("\nReveal any password? (y/n): ").strip().lower()
+
+    if choice == 'y':
+        website = input("Enter website name to reveal: ").lower()
+
+        if website in vault:
+            encrypted_password = vault[website]["password"]
+            password = cipher.decrypt(encrypted_password.encode()).decode()
+
+            print("\nRevealed Password:")
+            print("Website:", website)
+            print("Username:", vault[website]["username"])
+            print("Password:", password)
+        else:
+            print("Website not found!")
+
+    elif choice == 'n':
+        return
+    else:
+        print("Invalid input!")
 
 #----------------------------------------------------------------------------------------------------
 
