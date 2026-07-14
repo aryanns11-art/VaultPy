@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlparse
 from getpass import getpass
-import random
+import secrets
 import string
 from cryptography.fernet import Fernet
 import hashlib
@@ -243,10 +243,12 @@ def generate_password(length=8):
 
     chars = string.ascii_letters + string.digits + "!@#$%^&*"
 
-    password = "".join(
-        random.choice(chars)
-        for _ in range(length)
-    )
+    while True:
+        password = ''.join(secrets.choice(chars) for i in range(10))
+        if (any(c.islower() for c in password)
+                and any(c.isupper() for c in password)
+                and sum(c.isdigit() for c in password) >= 3):
+            break
 
     return password
            
