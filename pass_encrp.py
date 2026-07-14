@@ -6,6 +6,7 @@ import string
 from cryptography.fernet import Fernet
 import hashlib
 import os
+import pyperclip
 
 FILE_NAME = "vault.json"
 
@@ -182,13 +183,25 @@ def view_password(vault):
         if website in vault:
             encrypted_password = vault[website]["password"]
             password = cipher.decrypt(encrypted_password.encode()).decode()
-
-            print("\nRevealed Password:")
-            print("Website:", website)
-            print("Username:", vault[website]["username"])
-            print("Password:", password)
-        else:
-            print("Website not found!")
+        
+            print("\n1. Show Password")
+            print("2. Copy Password")
+            print("3. Cancel")
+        
+            option = input("Choose option: ")
+        
+            if option == "1":
+                print("\nPassword:", password)
+        
+            elif option == "2":
+                pyperclip.copy(password)
+                print("Password copied to clipboard!")
+        
+            elif option == "3":
+                return
+        
+            else:
+                print("Invalid choice!")
 
     elif choice == 'n':
         return
@@ -196,20 +209,42 @@ def view_password(vault):
         print("Invalid input!")
 
 #----------------------------------------------------------------------------------------------------
-
 def search_password(vault):
-    website = input("Enter website name: ").lower()
 
-    if website in vault:
+    search_web = input("Enter website name: ").lower()
 
-        encrypted_password = vault[website]["password"]
-        password = cipher.decrypt(encrypted_password.encode()).decode()
+    matches = []
 
-        print("\nWebsite: ", website)
-        print("Username: ", vault[website]["username"])
-        print("Password: ", password)
-    else:
+    for web in vault:
+        if search_web in web:
+            matches.append(web)
+
+    if len(matches) ==0:
         print("Website not found!")
+        return
+
+    elif len(matches)== 1:
+        website = matches[0]
+
+    else:
+        print("\n Matching Websites:")
+        for i, web in enumerate(matches, 1):
+            print(f"{i}. {web}")
+
+        try:
+            choice = int(input("Select website: "))
+            website = matches[choice - 1]
+
+        except (ValueError, IndexError):
+            print("Invalid choice!")
+            return
+
+    encrypted_password = vault[website]["password"]
+    password = cipher.decrypt(encrypted_password.encode()).decode()
+
+    print("\nWebsite :", website)
+    print("Username:", vault[website]["username"])
+    print("Password:", password)
 
 #----------------------------------------------------------------------------------------------------
 
