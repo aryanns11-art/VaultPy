@@ -1,7 +1,7 @@
 {
     "instagram": {
         "username": "aryan0411",
-        "password": "gAAAAABqMXde19RypGEUi6fzAD5Y-FShwuR4opq1_B9iZCJ6DYlpLSLn0SWjrZoxdH_6Ls6DKXzANsUyqy7HWlDd0SEN2DGwwQ==",
+        "password": "gAAAAABqVhaZj9nZ-pL547eJGuk5fJz5NEW_kO-4LJHOi6n1NhzWXBEaUhyH_fk33QRF_Ivf3tYZ7auVaYQTnqpvLr9DxbWdsQ==",
         "url": "https://www.instagram.com/"
     },
     "github": {
@@ -18,5 +18,25 @@
         "username": "Aryan66",
         "password": "gAAAAABqMXcVuo68sqrxaYVgbOuu5BuSTqssdthX7e8-C2x26RY_RoCzM8jxc69_8t0wOMEGE9_KeasQ1-SViudac_-OsFuMlw==",
         "url": "https://www.flipkart.com/"
+    },
+    "meesho": {
+        "username": "Rn88",
+        "password": "gAAAAABqN_3tUItNszT_YfP3uFMVX65nvucJqKT4sxR2LCd9bqTtJUOOWdKeALiWvcqMfC8tm0ccjMJQo4LQOmd8X1MfuCc3YA==",
+        "url": "https://www.meesho.com/?srsltid=AfmBOorOSuhltPUVelagGFzC9BNj-oSFHTgrCDMgN7S5HvzNMsf06fdk"
+    },
+    "spotify": {
+        "username": "Aryan44",
+        "password": "gAAAAABqN_5EeQ_MCfdVmL2JgOE3g2urjYIfdSwbf8OEB3l6VXj0wHFXrmAvhdSP0OkymmutpbZlts828T8aWSkv_caIM8oUdg==",
+        "url": "https://open.spotify.com/"
+    },
+    "firebase": {
+        "username": "aryan6461",
+        "password": "gAAAAABqVhcQPnMQM03OXaozkDgX_YA0X-BVq0DPlzanowobiFzNe2E9GSdbTgZTW-m5W4L6lhzz92IFsBw0a0Ev0WO_0bKhlw==",
+        "url": "https://firebase.google.com/"
+    },
+    "snapchat": {
+        "username": "Aryan66",
+        "password": "gAAAAABqXxSkTvz4BCWQTj9mXMuk112v68FJ4ao8X5O7fI3FDysN4PYkogMmHlwnrgubm2zuVF1i2iDEYyNup6yG5ynZluO78g==",
+        "url": "https://www.snapchat.com/?ref=web_nav_chat_icon&original_referrer=www.google.com"
     }
 }
